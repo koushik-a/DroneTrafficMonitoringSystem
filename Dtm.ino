@@ -1,41 +1,25 @@
 #include "Adafruit_FONA.h"
-
-
 #define SIMCOM_7000
 #define SIMCOM_7070
-
-
-
-// For botletics SIM7000 shield
+// For  SIM7000 shield
 #define FONA_PWRKEY 6
 #define FONA_RST 7
 #define FONA_TX 10 // Microcontroller RX
 #define FONA_RX 11 // Microcontroller TX
 
-
-
-// this is a large buffer for replies
+// this is a buffer used for replies
 char replybuffer[255];
 
-// We default to using software serial. If you want to use hardware serial
-// (because softserial isnt supported) comment out the following three lines 
-// and uncomment the HardwareSerial line
+// We are using software serial monitor to send command and observe data logging
 #include <SoftwareSerial.h>
 SoftwareSerial fonaSS = SoftwareSerial(FONA_TX, FONA_RX);
-
-// Use the following line for ESP8266 instead of the line above (comment out the one above)
-//SoftwareSerial fonaSS = SoftwareSerial(FONA_TX, FONA_RX, false, 256); // TX, RX, inverted logic, buffer size
-
 SoftwareSerial *fonaSerial = &fonaSS;
-
 // Use this for 2G modules
 #ifdef SIMCOM_2G
   Adafruit_FONA fona = Adafruit_FONA(FONA_RST);
-  
 // Use this one for 3G modules
 #elif defined(SIMCOM_3G)
-  Adafruit_FONA_3G fona = Adafruit_FONA_3G(FONA_RST);
-  
+  Adafruit_FONA_3G fona = Adafruit_FONA_3G(FONA_RST); 
 // Use this one for LTE CAT-M/NB-IoT modules (like SIM7000)
 // Notice how we don't include the reset pin because it's reserved for emergencies on the LTE module!
 #elif defined(SIMCOM_7000) || defined(SIMCOM_7070) || defined(SIMCOM_7500) || defined(SIMCOM_7600)
@@ -74,9 +58,6 @@ void setup() {
     Serial.println(F("Couldn't find FONA"));
     while (1); // Don't proceed if it couldn't find the device
   }
-
-  
-
 
   type = fona.type();
   Serial.println(F("FONA is OK"));
@@ -124,7 +105,6 @@ void setup() {
   // fona.setNetworkSettings(F("m2m.com.attz")); // For AT&T IoT SIM card
   //fona.setNetworkSettings(F("telstra.internet")); // For Telstra (Australia) SIM card - CAT-M1 (Band 28)
   fona.setNetworkSettings(F("hologram")); // For Hologram SIM card
-
 
 
   printMenu();
@@ -695,7 +675,7 @@ void loop() {
       }
 
 
-    /*********************************** GPS */
+    /* GPS */
 
     case 'o': {
         // turn GPS off
@@ -817,7 +797,7 @@ void loop() {
         char url[80];
 
         flushSerial();
-        Serial.println(F("URL to read (e.g. dweet.io/get/latest/dweet/for/sim7500test123):"));
+        Serial.println(F("URL to read (e.g. dweet.io/get/latest/dweet/for/869951031076775):"));
         Serial.print(F("http://")); readline(url, 79);
         Serial.println(url);
 
@@ -854,7 +834,6 @@ void loop() {
         char data[80];
 
         flushSerial();
-        Serial.println(F("NOTE: in beta! Use simple websites to post!"));
         Serial.println(F("URL to post (e.g. httpbin.org/post):"));
         Serial.print(F("http://")); readline(url, 79);
         Serial.println(url);
@@ -996,7 +975,7 @@ void loop() {
     /*****************************************/
 
     case 'S': {
-        Serial.println(F("Creating SERIAL TUBE"));
+        Serial.println(F("Creating SERIAL TUNNEL"));
         while (1) {
           while (Serial.available()) {
             delay(1);
